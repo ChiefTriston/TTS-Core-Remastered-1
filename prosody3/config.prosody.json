@@ -1,0 +1,27 @@
+
+{
+  "loss": {
+    "f0_weight": 1.0,
+    "energy_weight": 1.0,
+    "reduction": "mean",
+    "ignore_index": null
+  },
+  "predictor": {
+    "emb_dim": 384,
+    "cond_dim": 256,
+    "n_layers": 4,
+    "use_amp": false,
+    "n_freq": 80
+  },
+  "s4": {
+    "heads": 4,
+    "l_max": 1024,
+    "rank": 1,
+    "dropout": 0.1,
+    "norm_groups": 8,
+    "use_fft": false,
+    "causal": false,
+    "cache_decay": true,
+    "fft_threshold": 2.0
+  }
+}
