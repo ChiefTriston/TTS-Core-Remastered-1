@@ -1,0 +1,26 @@
+{
+  "bands": [24, 28, 28],
+  "levels": 3,
+  "flows": 3,
+  "cond_dim": 256,
+  "time_dim": 256,
+  "beta_hidden": 64,
+  "hidden_channels": 512,
+  "hsflayer_hidden": 256,
+  "hsflayer_layers": 4,
+  "hsflayer_kernel": 5,
+  "style_dim": 128,
+  "vq_dims": [512, 256],
+  "vq_codes":[512, 256],
+  "cnf_dim": 80,
+  "max_avg_time": 0.5,
+  "benchmark_runs": 5,
+  "profile": false,
+  "s4": {
+    "l_max": 1024,
+    "heads": 4,
+    "dropout": 0.1,
+    "causal": true,
+    "norm_groups": 4
+  }
+}
