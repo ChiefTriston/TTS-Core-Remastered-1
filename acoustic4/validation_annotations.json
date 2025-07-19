@@ -1,0 +1,4 @@
+[
+  {"audio_path": "clip1.wav", "emotion": "joy", "vader_scores": [...], "prosody_features": [...]},
+  ...
+]
