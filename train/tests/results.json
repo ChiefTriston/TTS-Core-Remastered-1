@@ -1,0 +1,56 @@
+{
+  "pre_refactor": {
+    "acoustic": {
+      "forward_ms": 120.5,
+      "backward_ms": 150.3,
+      "max_mem_mb": 2048.0
+    },
+    "refiner": {
+      "forward_ms": 80.2,
+      "backward_ms": 100.4,
+      "max_mem_mb": 1536.0
+    },
+    "vocoder": {
+      "forward_ms": 200.7,
+      "backward_ms": 200.7,
+      "max_mem_mb": 2560.0
+    },
+    "iters_per_sec": 0.85
+  },
+  "post_refactor": {
+    "acoustic": {
+      "forward_ms": 118.2,
+      "backward_ms": 147.1,
+      "max_mem_mb": 2010.5
+    },
+    "refiner": {
+      "forward_ms": 78.9,
+      "backward_ms": 98.3,
+      "max_mem_mb": 1500.2
+    },
+    "vocoder": {
+      "forward_ms": 195.4,
+      "backward_ms": 195.4,
+      "max_mem_mb": 2500.7
+    },
+    "iters_per_sec": 0.87
+  },
+  "diff": {
+    "acoustic": {
+      "forward_ms": -2.3,
+      "backward_ms": -3.2,
+      "max_mem_mb": -37.5
+    },
+    "refiner": {
+      "forward_ms": -1.3,
+      "backward_ms": -2.1,
+      "max_mem_mb": -35.8
+    },
+    "vocoder": {
+      "forward_ms": -5.3,
+      "backward_ms": -5.3,
+      "max_mem_mb": -59.3
+    },
+    "iters_per_sec": 0.02
+  }
+}
