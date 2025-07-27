@@ -1,0 +1,62 @@
+# config.yaml (updated with max_slice_len)
+global:
+  raw_audio_dir: /raw_audio/
+  output_base: /output/
+  hf_token: your_huggingface_token_here
+  github_repo_path: /path/to/local/clone/of/github.com/ChiefTriston/TTS-Core-Remastered-1/
+  github_target_dir: reference_encoder/Encoder Training Regimine/
+  use_gpu: true
+  sample_rate: 22050
+
+diarization:
+  model: large-v2
+  batch_size: 16
+  compute_type: float16
+
+prosody:
+  extract_freq: 50
+  n_layers: 4
+  cond_dim: 256
+  use_amp: true
+
+drift:
+  thresh_pitch: 1.0
+  thresh_energy: 1.0
+  buffer_zone: 0.2
+  smoothing_window: 5
+  smoothing_order: 2
+
+transcription:
+  model: large-v2
+  vad_thresh: 0.5
+
+alignment:
+  weights:
+    silence: 0.2
+    prosody: 0.3
+    polarity: 0.3
+    vad: 0.2
+  fade_buffer: 0.5
+  max_slice_len: 10.0
+
+tier1:
+  compound_pos: 0.05
+  compound_neg: -0.05
+  confidence_thresh: 0.1
+
+tier2:
+  negation_weight: 1.0
+
+anomaly:
+  hallucination_min_len: 5
+  repetition_thresh: 0.5
+  outlier_std_mult: 2.0
+
+arc:
+  num_clusters: 3
+
+observer:
+  # No specific params
+
+git_sync:
+  commit_message: "Emotion tags update"
