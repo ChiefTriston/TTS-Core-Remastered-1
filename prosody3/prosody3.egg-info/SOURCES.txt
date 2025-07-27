@@ -1,0 +1,5 @@
+setup.py
+prosody3.egg-info/PKG-INFO
+prosody3.egg-info/SOURCES.txt
+prosody3.egg-info/dependency_links.txt
+prosody3.egg-info/top_level.txt
