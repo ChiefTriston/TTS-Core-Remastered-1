@@ -1,0 +1,90 @@
+# config.yaml
+
+# Global settings
+global:
+  raw_audio_dir: "C:\\Users\\trist\\OneDrive\\Documents\\Remastered TTS Final Version\\TTS Core Remastered\\reference_encoder\\data\\Encoder Training Regimine\\Raw Audio"  # Directory for incoming .wav and .ready files
+  output_base: "/output/"  # Base directory for pipeline outputs
+  hf_token: ""  # (optional) Hugging Face token for model downloads
+  github_repo_path: "/path/to/local/clone/of/github.com/ChiefTriston/TTS-Core-Remastered-1/"  # Local Git repo path for sync
+  github_target_dir: "reference_encoder/Encoder Training Regimine/"  # Subdirectory in repo for outputs
+  use_gpu: true  # Enable GPU (CUDA) if available
+  sample_rate: 22050  # Audio sample rate
+  plot_map_dir: "plot_maps"  # Folder name for interactive HTML plot maps
+
+# Diarization settings
+diarization:
+  model: "large-v2"         # WhisperX model size
+  batch_size: 16             # Batch size for transcription
+  compute_type: "float32"   # Precision (float32 or float16)
+  chunk_seconds: 600         # Chunk length (sec) for diarization
+
+# Prosody extraction settings
+prosody:
+  extract_freq: 50   # Feature extraction rate (Hz)
+  n_layers: 4        # Layers in ProsodyPredictorV15 model
+  cond_dim: 256      # Conditioning dimension
+  use_amp: true      # Automatic mixed precision
+
+# Drift detection settings
+drift:
+  thresh_pitch: 1.0         # Pitch-delta multiplier
+  thresh_energy: 1.0        # Energy-delta multiplier
+  buffer_zone: 0.2          # Merge drifts within this window (sec)
+  smoothing_window: 5       # Savitzky–Golay window size
+  smoothing_order: 2        # Savitzky–Golay polynomial order
+
+# Transcription settings
+transcription:
+  model: "large-v2"   # WhisperX model for slice transcription
+  vad_thresh: 0.5       # Minimum VAD voiced ratio to keep segment
+  frame_ms: 30          # VAD frame size in milliseconds
+
+# Alignment settings
+alignment:
+  weights:
+    silence: 0.2   # Weight for silence score
+    prosody: 0.3   # Weight for prosody score
+    polarity: 0.3  # Weight for polarity score
+    vad: 0.2       # Weight for VAD score
+  fade_buffer: 0.5    # Buffer (sec) at slice ends for fade scoring
+  max_slice_len: 10.0 # Max slice duration (sec) for silence scoring
+
+# Tier-1 tagging settings
+tier1:
+  auto_accept_conf: 0.93    # Auto-accept threshold (abs compound)
+  min_conf: 0.90            # Minimum confidence to tag sentiment
+  compound_pos: 0.05        # Positive vs neutral cutoff
+  compound_neg: -0.05       # Negative vs neutral cutoff
+  confidence_thresh: 0.1    # Below this uses TextBlob fallback
+
+# Tier-2 tagging settings
+tier2:
+  auto_accept_conf: 0.90    # Auto-accept confidence threshold
+  min_conf: 0.65            # Review threshold for Tier-2
+  negation_weight: 1.0      # Multiplier for negation invert rule
+
+# Anomaly detection settings
+anomaly:
+  hallucination_min_len: 5   # Minimum text length to avoid hallucination flag
+  repetition_thresh: 0.5    # Max repetition ratio threshold
+  outlier_std_mult: 2.0     # Outlier multiplier on sentiment std
+
+# Arc classification settings
+arc:
+  num_clusters: 3           # Default clusters for pivot detection
+
+# Observer UI settings (unused placeholders)
+observer: {}
+
+# Git sync settings
+git_sync:
+  commit_message: "Emotion tags update"  # Git commit message when pushing
+
+# Dynamic learning settings
+dynamic_learning:
+  data_root: "/path/to/tier1_data"      # Root directory for Tier-1 data
+  validation_set: "validation_set.json"  # Filename for held-out validation set
+  sample_frac: 0.05                      # Fraction per emotion to sample
+  max_samples: 500                       # Maximum samples in validation set
+  alert_drop_threshold: 0.05             # Accuracy drop threshold (relative)
+
