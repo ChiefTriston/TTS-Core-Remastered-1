@@ -1,3 +1,0 @@
-[console_scripts]
-hyperdiarizer = hyper_diarizer.hyper_diarizer:main
-
