@@ -1,0 +1,26 @@
+Metadata-Version: 2.4
+Name: hyper_diarizer
+Version: 0.1.0
+Summary: Hyper-diarizer: advanced speaker segmentation for EmotionDriftObserver
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: scikit-learn
+Requires-Dist: faiss-cpu
+Requires-Dist: librosa
+Requires-Dist: resemblyzer
+Requires-Dist: webrtcvad
+Requires-Dist: speechbrain
+Requires-Dist: torch>=1.10.0
+Requires-Dist: torchaudio
+Requires-Dist: pyyaml
+Requires-Dist: networkx
+Requires-Dist: bidict
+Requires-Dist: openai-whisper
+Requires-Dist: demucs
+Requires-Dist: pyannote.core>=4.0
+Requires-Dist: pyannote.metrics
+Requires-Dist: matplotlib
+Requires-Dist: plotly
+Requires-Dist: tqdm
+Requires-Dist: scipy
