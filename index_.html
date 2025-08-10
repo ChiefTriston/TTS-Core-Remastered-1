@@ -1,222 +1,146 @@
-<!doctype html>
+# Create a simple, free, GitHub-API-powered recursive repo browser.
+# Drop this as index.html in the repo root. It lists ALL files/folders (recursively),
+# supports filtering, and shows file content with Raw/GitHub links.
+owner = "ChiefTriston"
+repo = "TTS-Core-Remastered-1"
+branch = "main"
+
+html = f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TTS-Core-Remastered-1 — Repo Browser</title>
-  <meta name="description" content="Public, read-only browser for the GitHub repository.">
+  <title>{repo} — Free Repo Browser</title>
   <style>
-    :root {
-      --bg:#0b0d12; --ink:#e7e9ee; --muted:#9aa3b2; --line:#202534; --card:#111625; --accent:#7dd3fc;
-    }
-    * { box-sizing: border-box; }
-    body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',sans-serif; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    header { position:sticky; top:0; background:linear-gradient(180deg,rgba(16,20,32,.95),rgba(16,20,32,.6) 60%,transparent); backdrop-filter: blur(6px); z-index:5; border-bottom:1px solid var(--line) }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 16px 20px; }
-    h1 { margin: 8px 0 6px; font-size: 22px; }
-    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .right { margin-left:auto; }
-    .btn { cursor:pointer; border:1px solid var(--line); background:#0f1422; color:var(--ink); padding:6px 10px; border-radius:10px; font-size:14px; }
-    .btn:hover { background:#121a2d; }
-    .grid { display:grid; grid-template-columns: 320px 1fr; gap:14px; }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 2px 18px rgba(0,0,0,.25) }
-    .list { list-style:none; margin:0; padding:0; display:grid; gap:6px; max-height:68vh; overflow:auto; }
-    .item { display:flex; gap:10px; align-items:center; border:1px solid var(--line); border-radius:10px; padding:8px; }
-    .icon { width:18px; height:18px; display:inline-block; opacity:.9 }
-    .crumbs a { margin-right:8px }
-    pre.code { white-space: pre; overflow:auto; background:#0f1422; border:1px solid var(--line); padding:12px; border-radius:10px; max-height:68vh; }
-    .small { font-size:12px; }
-    .pill { font-size:12px; border:1px solid var(--line); padding:4px 8px; border-radius:999px; }
-    input[type="search"] { width:100%; padding:8px; border-radius:10px; border:1px solid var(--line); background:#0f1422; color:var(--ink); }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
+    body{{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;background:#0b0d12;color:#e7e9ee}}
+    a{{color:#7dd3fc;text-decoration:none}} a:hover{{text-decoration:underline}}
+    header{{position:sticky;top:0;background:#0b0d12cc;backdrop-filter:blur(6px);border-bottom:1px solid #202534}}
+    .wrap{{max-width:1200px;margin:0 auto;padding:12px 16px}}
+    .row{{display:flex;gap:10px;align-items:center;flex-wrap:wrap}}
+    .right{{margin-left:auto}}
+    .btn{{border:1px solid #202534;background:#0f1422;color:#e7e9ee;border-radius:10px;padding:6px 10px;cursor:pointer}}
+    .grid{{display:grid;grid-template-columns:320px 1fr;gap:12px;padding:14px 16px;max-width:1200px;margin:0 auto}}
+    .card{{border:1px solid #202534;background:#111625;border-radius:12px;padding:10px}}
+    .tree, .list{{list-style:none;margin:0;padding:0}}
+    .node{{padding:4px 6px;border-radius:8px;display:flex;gap:8px;align-items:center}}
+    .node:hover{{background:#121a2d}}
+    .indent{{margin-left:18px;border-left:1px dashed #202534;padding-left:8px}}
+    .mono{{font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}}
+    .muted{{color:#9aa3b2}}
+    input[type="search"]{{width:100%;padding:8px;border-radius:10px;border:1px solid #202534;background:#0f1422;color:#e7e9ee}}
+    pre{{white-space:pre;overflow:auto;max-height:70vh;background:#0f1422;border:1px solid #202534;border-radius:10px;padding:12px}}
+    .pill{{border:1px solid #202534;border-radius:999px;padding:2px 8px;font-size:12px}}
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap row">
-      <h1>TTS-Core-Remastered-1</h1>
-      <span class="pill">Public browser</span>
-      <a class="btn right" id="openRepo" target="_blank" rel="noopener">View on GitHub</a>
-    </div>
-  </header>
+<header>
+  <div class="wrap row">
+    <strong>{repo}</strong>
+    <span class="pill">Free, API-powered</span>
+    <a id="ghLink" class="btn right" target="_blank" rel="noopener">Open on GitHub</a>
+  </div>
+</header>
 
-  <main class="wrap">
-    <div class="grid">
-      <aside class="card">
-        <div class="row" style="margin-bottom:8px">
-          <div class="mono small" id="repoMeta">ChiefTriston/TTS-Core-Remastered-1@main</div>
-        </div>
-        <div class="small" id="crumbs"></div>
-        <div style="margin:8px 0"><input type="search" id="filter" placeholder="Filter files..."></div>
-        <ul class="list" id="list"></ul>
-      </aside>
-      <section class="card">
-        <div class="row" style="margin-bottom:8px">
-          <div class="mono" id="viewerTitle">Select a file to view.</div>
-          <a class="btn right small" id="rawBtn" style="display:none" target="_blank" rel="noopener">Open raw</a>
-          <a class="btn right small" id="ghBtn" style="display:none" target="_blank" rel="noopener">Open on GitHub</a>
-        </div>
-        <pre class="code mono" id="viewer"></pre>
-        <div class="small" style="color:var(--muted)" id="viewerNote"></div>
-      </section>
+<main class="grid">
+  <aside class="card">
+    <div class="row" style="margin-bottom:8px">
+      <div class="mono small">{owner}/{repo}@{branch}</div>
     </div>
-
-    <section class="card" style="margin-top:14px">
-      <div class="row">
-        <strong>AI Brief</strong>
-        <button class="btn right" id="copyBrief">Copy brief</button>
-      </div>
-      <pre class="code" id="brief"></pre>
-      <div class="small" style="color:var(--muted)">This pulls top-level README (if present) and lists folders/files for assistance.</div>
-    </section>
-  </main>
+    <input id="filter" type="search" placeholder="Filter files...">
+    <ul id="tree" class="tree"></ul>
+  </aside>
+  <section class="card">
+    <div class="row" style="margin-bottom:8px">
+      <div class="mono" id="title">Select a file.</div>
+      <a class="btn right" id="rawBtn" style="display:none" target="_blank">Open raw</a>
+      <a class="btn right" id="blobBtn" style="display:none" target="_blank">Open on GitHub</a>
+    </div>
+    <pre id="viewer" class="mono"></pre>
+    <div class="muted mono" id="note"></div>
+  </section>
+</main>
 
 <script>
-(function(){
-  const owner = "ChiefTriston";
-  const repo = "TTS-Core-Remastered-1";
-  const branch = "main";
-  const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/`;
-  const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
-  const ghRepoUrl = `https://github.com/${owner}/${repo}`;
-  document.getElementById("openRepo").href = ghRepoUrl;
+(function(){{
+  const owner="{owner}", repo="{repo}", branch="{branch}";
+  const apiRoot = `https://api.github.com/repos/${{owner}}/${{repo}}/contents/`;
+  const rawRoot = `https://raw.githubusercontent.com/${{owner}}/${{repo}}/${{branch}}/`;
+  const blobRoot = `https://github.com/${{owner}}/${{repo}}/blob/${{branch}}/`;
+  document.getElementById("ghLink").href = `https://github.com/${{owner}}/${{repo}}`;
 
-  const listEl = document.getElementById("list");
+  const treeEl = document.getElementById("tree");
   const viewer = document.getElementById("viewer");
-  const viewerTitle = document.getElementById("viewerTitle");
-  const viewerNote = document.getElementById("viewerNote");
-  const crumbs = document.getElementById("crumbs");
+  const title = document.getElementById("title");
+  const note = document.getElementById("note");
   const rawBtn = document.getElementById("rawBtn");
-  const ghBtn = document.getElementById("ghBtn");
+  const blobBtn = document.getElementById("blobBtn");
   const filter = document.getElementById("filter");
-  const brief = document.getElementById("brief");
 
-  let cwd = ""; // current path
-  let entries = [];
-
-  function icon(kind){
-    if(kind==="dir") return "📁";
-    if(kind==="file") return "📄";
-    return "❓";
-  }
-
-  async function fetchJson(url){
-    const r = await fetch(url);
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+  function li(html){{ const el=document.createElement('li'); el.innerHTML=html; return el; }}
+  function esc(s){{ return (s||'').replace(/[&<>]/g, m=>({{ '&':'&amp;','<':'&lt;','>':'&gt;' }}[m])); }}
+  async function get(path=""){{
+    const url = apiRoot + path;
+    const r = await fetch(url); if(!r.ok) throw new Error(`HTTP ${{r.status}}`);
     return await r.json();
-  }
+  }}
 
-  async function list(path=""){
-    cwd = path;
-    const url = apiBase + (path ? path.replace(/^\/+/, "") : "");
-    const data = await fetchJson(url);
-    // sort: dirs first, then files, alpha
-    entries = data.sort((a,b)=> (a.type===b.type? a.name.localeCompare(b.name) : (a.type==="dir"? -1:1)));
-    renderList();
-    renderCrumbs();
-    buildBrief();
-  }
+  async function buildTree(path="", container){{
+    const entries = await get(path);
+    // sort dirs first, then files
+    entries.sort((a,b)=> a.type===b.type ? a.name.localeCompare(b.name) : (a.type==='dir'?-1:1));
+    for(const e of entries){{
+      if(filter.value && !e.name.toLowerCase().includes(filter.value.toLowerCase())) continue;
+      if(e.type==='dir'){{ // folder
+        const item = li(`<div class="node"><span>📁</span><a href="#" data-path="${{e.path}}" data-type="dir">${{esc(e.name)}}</a></div>`);
+        const sub = document.createElement('ul'); sub.className='tree indent'; item.appendChild(sub);
+        container.appendChild(item);
+        // Lazy expand on click
+        item.querySelector('a').addEventListener('click', async (ev)=>{{
+          ev.preventDefault();
+          if(sub.childElementCount===0) {{ await buildTree(e.path, sub); }}
+          sub.style.display = sub.style.display==='none' ? '' : 'none';
+        }});
+      }} else {{ // file
+        const item = li(`<div class="node"><span>📄</span><a href="#" data-path="${{e.path}}" data-type="file">${{esc(e.name)}}</a></div>`);
+        container.appendChild(item);
+        item.querySelector('a').addEventListener('click', (ev)=>{{ev.preventDefault(); viewFile(e.path);}});
+      }}
+    }}
+  }}
 
-  function renderList(){
-    const q = (filter.value||"").toLowerCase();
-    listEl.innerHTML = "";
-    entries.filter(e => !q || e.name.toLowerCase().includes(q)).forEach(e => {
-      const li = document.createElement("li");
-      li.className = "item";
-      li.innerHTML = `<span class="icon">${icon(e.type)}</span>
-                      <a href="#" data-path="${e.path}" data-type="${e.type}">${e.name}</a>
-                      <span class="small mono" style="margin-left:auto; color:var(--muted)">${e.type}</span>`;
-      listEl.appendChild(li);
-    });
-  }
+  async function init(){{
+    treeEl.innerHTML = "";
+    await buildTree("", treeEl);
+  }}
 
-  function renderCrumbs(){
-    const parts = cwd ? cwd.split("/") : [];
-    crumbs.innerHTML = "";
-    const root = document.createElement("a");
-    root.href="#"; root.textContent="/";
-    root.addEventListener("click", (e)=>{e.preventDefault(); list("");});
-    crumbs.appendChild(root);
-    let acc = "";
-    parts.forEach((p,i)=>{
-      crumbs.append(" / ");
-      acc += (i? "/" :"") + p;
-      const a = document.createElement("a");
-      a.href="#"; a.textContent=p;
-      a.addEventListener("click", (e)=>{e.preventDefault(); list(acc);});
-      crumbs.appendChild(a);
-    });
-  }
-
-  async function viewFile(path){
-    viewer.textContent = "Loading...";
-    viewerTitle.textContent = path;
-    const rawUrl = rawBase + path;
-    rawBtn.href = rawUrl; rawBtn.style.display = "";
-    ghBtn.href = `${ghRepoUrl}/blob/${branch}/${path}`; ghBtn.style.display="";
-    try {
-      const r = await fetch(rawUrl);
-      const size = +r.headers.get("Content-Length") || 0;
-      if(size > 800000) {
+  async function viewFile(path){{
+    title.textContent = path;
+    const raw = rawRoot + path;
+    const blob = blobRoot + path;
+    rawBtn.href = raw; rawBtn.style.display='';
+    blobBtn.href = blob; blobBtn.style.display='';
+    viewer.textContent = "Loading..."; note.textContent="";
+    try{{
+      const r = await fetch(raw);
+      const size = +r.headers.get('Content-Length') || 0;
+      if(size > 900000){{ // ~900 KB
         viewer.textContent = "";
-        viewerNote.textContent = "File too large to display here. Use the buttons above to open it.";
+        note.textContent = "File too large to render inline. Use Open raw / Open on GitHub.";
         return;
-      }
+      }}
       const text = await r.text();
       viewer.textContent = text;
-      viewerNote.textContent = "";
-    } catch(err){
-      viewer.textContent = "Failed to load file.";
-      viewerNote.textContent = String(err);
-    }
-  }
+    }}catch(err){{
+      viewer.textContent = "Failed to load file."; note.textContent = String(err);
+    }}
+  }}
 
-  listEl.addEventListener("click", (e)=>{
-    const a = e.target.closest("a[data-path]");
-    if(!a) return;
-    e.preventDefault();
-    const path = a.getAttribute("data-path");
-    const type = a.getAttribute("data-type");
-    if(type === "dir") list(path);
-    else viewFile(path);
-  });
-
-  filter.addEventListener("input", renderList);
-
-  async function loadReadme(){
-    try {
-      const r = await fetch(rawBase + "README.md");
-      if(r.ok){
-        const text = await r.text();
-        return text.slice(0, 2400);
-      }
-    } catch(_){}
-    return "";
-  }
-
-  async function buildBrief(){
-    const readme = await loadReadme();
-    const lines = [];
-    lines.push(`# Repo Brief — ChiefTriston/TTS-Core-Remastered-1@main`);
-    lines.push(`Path: /${cwd||""}`);
-    lines.push("");
-    if(readme) {
-      lines.push(`## README (excerpt)`);
-      lines.push(readme.trim());
-      lines.push("");
-    }
-    if(entries && entries.length) {
-      lines.push("## Entries");
-      entries.slice(0,50).forEach(e=> lines.push(`- ${e.type} — ${e.name}`));
-    }
-    brief.textContent = lines.join("\n");
-  }
-
-  // Init at root
-  list("");
-})();
+  filter.addEventListener('input', ()=> init());
+  init();
+}})();
 </script>
 </body>
 </html>
+"""
+open('/mnt/data/index_recursive.html','w',encoding='utf-8').write(html)
+print("Wrote /mnt/data/index_recursive.html")
