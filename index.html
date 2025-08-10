@@ -1,4 +1,6 @@
-<!doctype html>
+# Write a corrected, clean index.html that immediately lists all files/folders
+# from ChiefTriston/TTS-Core-Remastered-1 (branch: main) with proper styling.
+html = """<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,30 +8,31 @@
   <title>TTS-Core-Remastered-1 — Repo Browser</title>
   <meta name="description" content="Public, read-only browser for the GitHub repository.">
   <style>
-    :root{{ --bg:#0b0d12; --ink:#e7e9ee; --muted:#9aa3b2; --line:#202534; --card:#111625; --accent:#7dd3fc; }}
-    *{{box-sizing:border-box}}
-    body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',sans-serif}}
-    a{{color:var(--accent);text-decoration:none}}
-    a:hover{{text-decoration:underline}}
-    header{{position:sticky;top:0;background:linear-gradient(180deg,rgba(16,20,32,.95),rgba(16,20,32,.6) 60%,transparent);backdrop-filter: blur(6px);z-index:5;border-bottom:1px solid var(--line)}}
-    .wrap{{max-width:1100px;margin:0 auto;padding:16px 20px}}
-    h1{{margin:8px 0 6px;font-size:22px}}
-    .muted{{color:var(--muted)}}
-    .row{{display:flex;gap:10px;align-items:center;flex-wrap:wrap}}
-    .right{{margin-left:auto}}
-    .btn{{cursor:pointer;border:1px solid var(--line);background:#0f1422;color:var(--ink);padding:6px 10px;border-radius:10px}}
-    .btn:hover{{background:#121a2d}}
-    .grid{{display:grid;grid-template-columns:320px 1fr;gap:14px}}
-    .card{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 2px 18px rgba(0,0,0,.25)}}
-    .list{{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:68vh;overflow:auto}}
-    .item{{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px}}
-    .icon{{width:18px;height:18px;display:inline-block;opacity:.9}}
-    .crumbs a{{margin-right:8px}}
-    pre.code{{white-space:pre;overflow:auto;background:#0f1422;border:1px solid var(--line);padding:12px;border-radius:10px;max-height:68vh}}
-    .small{{font-size:12px}}
-    .pill{{font-size:12px;border:1px solid var(--line);padding:4px 8px;border-radius:999px}}
-    input[type="search"]{{width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0f1422;color:var(--ink)}}
-    .mono{{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}}
+    :root {
+      --bg:#0b0d12; --ink:#e7e9ee; --muted:#9aa3b2; --line:#202534; --card:#111625; --accent:#7dd3fc;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',sans-serif; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header { position:sticky; top:0; background:linear-gradient(180deg,rgba(16,20,32,.95),rgba(16,20,32,.6) 60%,transparent); backdrop-filter: blur(6px); z-index:5; border-bottom:1px solid var(--line) }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 16px 20px; }
+    h1 { margin: 8px 0 6px; font-size: 22px; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .right { margin-left:auto; }
+    .btn { cursor:pointer; border:1px solid var(--line); background:#0f1422; color:var(--ink); padding:6px 10px; border-radius:10px; font-size:14px; }
+    .btn:hover { background:#121a2d; }
+    .grid { display:grid; grid-template-columns: 320px 1fr; gap:14px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 2px 18px rgba(0,0,0,.25) }
+    .list { list-style:none; margin:0; padding:0; display:grid; gap:6px; max-height:68vh; overflow:auto; }
+    .item { display:flex; gap:10px; align-items:center; border:1px solid var(--line); border-radius:10px; padding:8px; }
+    .icon { width:18px; height:18px; display:inline-block; opacity:.9 }
+    .crumbs a { margin-right:8px }
+    pre.code { white-space: pre; overflow:auto; background:#0f1422; border:1px solid var(--line); padding:12px; border-radius:10px; max-height:68vh; }
+    .small { font-size:12px; }
+    .pill { font-size:12px; border:1px solid var(--line); padding:4px 8px; border-radius:999px; }
+    input[type="search"] { width:100%; padding:8px; border-radius:10px; border:1px solid var(--line); background:#0f1422; color:var(--ink); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; }
   </style>
 </head>
 <body>
@@ -47,7 +50,7 @@
         <div class="row" style="margin-bottom:8px">
           <div class="mono small" id="repoMeta">ChiefTriston/TTS-Core-Remastered-1@main</div>
         </div>
-        <div class="crumbs small" id="crumbs"></div>
+        <div class="small" id="crumbs"></div>
         <div style="margin:8px 0"><input type="search" id="filter" placeholder="Filter files..."></div>
         <ul class="list" id="list"></ul>
       </aside>
@@ -58,7 +61,7 @@
           <a class="btn right small" id="ghBtn" style="display:none" target="_blank" rel="noopener">Open on GitHub</a>
         </div>
         <pre class="code mono" id="viewer"></pre>
-        <div class="small muted" id="viewerNote"></div>
+        <div class="small" style="color:var(--muted)" id="viewerNote"></div>
       </section>
     </div>
 
@@ -68,18 +71,19 @@
         <button class="btn right" id="copyBrief">Copy brief</button>
       </div>
       <pre class="code" id="brief"></pre>
-      <div class="small muted">This pulls top-level README (if present) and lists folders/files for assistance.</div>
+      <div class="small" style="color:var(--muted)">This pulls top-level README (if present) and lists folders/files for assistance.</div>
     </section>
   </main>
 
 <script>
-(function() {{
+(function(){
   const owner = "ChiefTriston";
   const repo = "TTS-Core-Remastered-1";
   const branch = "main";
-  const apiBase = `https://api.github.com/repos/${{owner}}/${{repo}}/contents/`;
-  const rawBase = `https://raw.githubusercontent.com/${{owner}}/${{repo}}/${{branch}}/`;
-  const ghRepoUrl = `https://github.com/${{owner}}/${{repo}}`;
+  const apiBase = `https://api.github.com/repos/${owner}/${repo}/contents/`;
+  const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+  const ghRepoUrl = `https://github.com/${owner}/${repo}`;
+  document.getElementById("openRepo").href = ghRepoUrl;
 
   const listEl = document.getElementById("list");
   const viewer = document.getElementById("viewer");
@@ -90,89 +94,88 @@
   const ghBtn = document.getElementById("ghBtn");
   const filter = document.getElementById("filter");
   const brief = document.getElementById("brief");
-  document.getElementById("openRepo").href = ghRepoUrl;
 
   let cwd = ""; // current path
   let entries = [];
 
-  function icon(kind){{
+  function icon(kind){
     if(kind==="dir") return "📁";
     if(kind==="file") return "📄";
     return "❓";
-  }}
+  }
 
-  async function fetchJson(url){{
+  async function fetchJson(url){
     const r = await fetch(url);
-    if(!r.ok) throw new Error(`HTTP ${{r.status}}`);
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
     return await r.json();
-  }}
+  }
 
-  async function list(path=""){{
+  async function list(path=""){
     cwd = path;
-    const url = apiBase + (path? path.replace(/^\/+/,'') : "");
+    const url = apiBase + (path ? path.replace(/^\\/+/, "") : "");
     const data = await fetchJson(url);
     // sort: dirs first, then files, alpha
     entries = data.sort((a,b)=> (a.type===b.type? a.name.localeCompare(b.name) : (a.type==="dir"? -1:1)));
     renderList();
     renderCrumbs();
     buildBrief();
-  }}
+  }
 
-  function renderList(){{
+  function renderList(){
     const q = (filter.value||"").toLowerCase();
     listEl.innerHTML = "";
-    entries.filter(e => !q || e.name.toLowerCase().includes(q)).forEach(e => {{
+    entries.filter(e => !q || e.name.toLowerCase().includes(q)).forEach(e => {
       const li = document.createElement("li");
       li.className = "item";
-      li.innerHTML = `<span class="icon">${{icon(e.type)}}<\/span>
-                      <a href="#" data-path="${{e.path}}" data-type="${{e.type}}">${{e.name}}<\/a>
-                      <span class="small muted mono" style="margin-left:auto">${{e.type}}<\/span>`;
+      li.innerHTML = `<span class="icon">${icon(e.type)}</span>
+                      <a href="#" data-path="${e.path}" data-type="${e.type}">${e.name}</a>
+                      <span class="small mono" style="margin-left:auto; color:var(--muted)">${e.type}</span>`;
       listEl.appendChild(li);
-    }});
-  }}
+    });
+  }
 
-  function renderCrumbs(){{
+  function renderCrumbs(){
     const parts = cwd ? cwd.split("/") : [];
     crumbs.innerHTML = "";
     const root = document.createElement("a");
     root.href="#"; root.textContent="/";
-    root.addEventListener("click", (e)=>{{e.preventDefault(); list("");}});
+    root.addEventListener("click", (e)=>{e.preventDefault(); list("");});
     crumbs.appendChild(root);
     let acc = "";
-    parts.forEach((p,i)=>{{
+    parts.forEach((p,i)=>{
       crumbs.append(" / ");
       acc += (i? "/" :"") + p;
       const a = document.createElement("a");
       a.href="#"; a.textContent=p;
-      a.addEventListener("click", (e)=>{{e.preventDefault(); list(acc);}});
+      a.addEventListener("click", (e)=>{e.preventDefault(); list(acc);});
       crumbs.appendChild(a);
-    }});
-  }}
+    });
+  }
 
-  async function viewFile(path){{
+  async function viewFile(path){
     viewer.textContent = "Loading...";
     viewerTitle.textContent = path;
     const rawUrl = rawBase + path;
     rawBtn.href = rawUrl; rawBtn.style.display = "";
-    ghBtn.href = `${{ghRepoUrl}}/blob/${{branch}}/${{path}}`; ghBtn.style.display="";
-    try {{
+    ghBtn.href = `${ghRepoUrl}/blob/${branch}/${path}`; ghBtn.style.display="";
+    try {
       const r = await fetch(rawUrl);
       const size = +r.headers.get("Content-Length") || 0;
-      if(size > 800000) {{
+      if(size > 800000) {
         viewer.textContent = "";
         viewerNote.textContent = "File too large to display here. Use the buttons above to open it.";
         return;
-      }}
+      }
       const text = await r.text();
       viewer.textContent = text;
       viewerNote.textContent = "";
-    }} catch(err){{
+    } catch(err){
       viewer.textContent = "Failed to load file.";
-      viewerNote.textContent = err+"";
-    }}
-  }}
+      viewerNote.textContent = String(err);
+    }
+  }
 
-  listEl.addEventListener("click", (e)=>{{
+  listEl.addEventListener("click", (e)=>{
     const a = e.target.closest("a[data-path]");
     if(!a) return;
     e.preventDefault();
@@ -180,47 +183,45 @@
     const type = a.getAttribute("data-type");
     if(type === "dir") list(path);
     else viewFile(path);
-  }});
+  });
 
   filter.addEventListener("input", renderList);
 
-  async function loadReadme(){{
-    try {{
+  async function loadReadme(){
+    try {
       const r = await fetch(rawBase + "README.md");
-      if(r.ok){{
+      if(r.ok){
         const text = await r.text();
         return text.slice(0, 2400);
-      }}
-    }} catch(_){}
+      }
+    } catch(_){}
     return "";
-  }}
+  }
 
-  async function buildBrief(){{
+  async function buildBrief(){
     const readme = await loadReadme();
     const lines = [];
-    lines.push(`# Repo Brief — ${{owner}}/${{repo}}@${{branch}}`);
-    lines.push(`Path: /${{cwd||""}}`);
+    lines.push(`# Repo Brief — ChiefTriston/TTS-Core-Remastered-1@main`);
+    lines.push(`Path: /${cwd||""}`);
     lines.push("");
-    if(readme) {{
+    if(readme) {
       lines.push(`## README (excerpt)`);
       lines.push(readme.trim());
       lines.push("");
-    }}
-    if(entries?.length) {{
+    }
+    if(entries && entries.length) {
       lines.push("## Entries");
-      entries.slice(0,50).forEach(e=> lines.push(`- ${{e.type}} — ${{e.name}}`));
-    }}
-    brief.textContent = lines.join("\n");
-  }}
+      entries.slice(0,50).forEach(e=> lines.push(`- ${e.type} — ${e.name}`));
+    }
+    brief.textContent = lines.join("\\n");
+  }
 
-  document.getElementById("copyBrief").addEventListener("click", async ()=>{{
-    try{{ await navigator.clipboard.writeText(brief.textContent); alert("Brief copied."); }}
-    catch(_){ alert("Copy failed — select and copy manually."); }
-  }});
-
-  // Init
-  list(""); // root
-}})();
+  // Init at root
+  list("");
+})();
 </script>
 </body>
 </html>
+"""
+open('/mnt/data/index_fixed.html','w',encoding='utf-8').write(html)
+print("Wrote /mnt/data/index_fixed.html")
