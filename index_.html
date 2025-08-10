@@ -2,37 +2,42 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>TTS-Core-Remastered-1 - File Browser</title>
+    <title>TTS-Core-Remastered-1 - Full Repo Browser</title>
 </head>
 <body>
-    <h1>TTS-Core-Remastered-1 - File Browser</h1>
+    <h1>TTS-Core-Remastered-1 - Full Repo Browser</h1>
     <ul id="file-list"></ul>
 
     <script>
-        async function loadFiles(path = "") {
-            const repo = "ChiefTriston/TTS-Core-Remastered-1";
-            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
-            const res = await fetch(apiUrl);
-            const data = await res.json();
+        const repoOwner = "ChiefTriston";
+        const repoName = "TTS-Core-Remastered-1";
 
-            const list = document.getElementById("file-list");
-            list.innerHTML = "";
-
-            data.forEach(item => {
-                const li = document.createElement("li");
-                if (item.type === "dir") {
-                    li.innerHTML = `<strong>[DIR]</strong> <a href="?path=${item.path}">${item.name}</a>`;
-                } else {
-                    li.innerHTML = `<a href="${item.html_url}" target="_blank">${item.name}</a>`;
-                }
-                list.appendChild(li);
-            });
+        async function fetchFiles(path = "") {
+            const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${path}`;
+            const res = await fetch(url);
+            return res.json();
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const path = urlParams.get("path") || "";
-        loadFiles(path);
+        async function listAllFiles(path = "", container) {
+            const items = await fetchFiles(path);
+            for (const item of items) {
+                const li = document.createElement("li");
+
+                if (item.type === "dir") {
+                    li.innerHTML = `<strong>[DIR]</strong> ${item.path}`;
+                    container.appendChild(li);
+
+                    const ul = document.createElement("ul");
+                    li.appendChild(ul);
+                    await listAllFiles(item.path, ul);
+                } else {
+                    li.innerHTML = `<a href="https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/${item.path}" target="_blank">${item.path}</a>`;
+                    container.appendChild(li);
+                }
+            }
+        }
+
+        listAllFiles("", document.getElementById("file-list"));
     </script>
 </body>
 </html>
-
