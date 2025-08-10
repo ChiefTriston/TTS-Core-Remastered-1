@@ -1,99 +1,38 @@
-# Re-write using placeholders to avoid Python f-string conflicts
-owner = "ChiefTriston"
-repo = "TTS-Core-Remastered-1"
-branch = "main"
-
-template = """<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>{REPO} — Files</title>
-  <style>
-    body{font:14px/1.4 Arial, sans-serif; margin:20px}
-    a{text-decoration:none; color:#0366d6}
-    a:hover{text-decoration:underline}
-    ul{list-style:none; padding-left:18px}
-    .dir>span{font-weight:bold}
-    .muted{color:#666; font-size:12px; margin-left:6px}
-    #search{width:320px}
-    pre{white-space:pre-wrap; border:1px solid #ddd; padding:8px; overflow:auto; max-height:60vh}
-  </style>
+    <meta charset="UTF-8">
+    <title>TTS-Core-Remastered-1 - File Browser</title>
 </head>
 <body>
-<h2>{REPO} — All Files</h2>
-<input id="search" type="search" placeholder="Filter names..."> <span class="muted">{OWNER}/{REPO}@{BRANCH}</span>
-<div id="status"></div>
-<ul id="tree"></ul>
-<hr>
-<div id="viewerWrap" style="display:none">
-  <div><strong id="path"></strong> — <a id="raw" target="_blank">raw</a> | <a id="blob" target="_blank">github</a></div>
-  <pre id="viewer"></pre>
-</div>
+    <h1>TTS-Core-Remastered-1 - File Browser</h1>
+    <ul id="file-list"></ul>
 
-<script>
-(function(){
-  const owner="{OWNER}", repo="{REPO}", branch="{BRANCH}";
-  const api = p => `https://api.github.com/repos/${owner}/${repo}/contents/${p||""}`;
-  const raw = p => `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${p}`;
-  const blob = p => `https://github.com/${owner}/${repo}/blob/${branch}/${p}`;
+    <script>
+        async function loadFiles(path = "") {
+            const repo = "ChiefTriston/TTS-Core-Remastered-1";
+            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
+            const res = await fetch(apiUrl);
+            const data = await res.json();
 
-  const tree = document.getElementById('tree');
-  const search = document.getElementById('search');
-  const status = document.getElementById('status');
+            const list = document.getElementById("file-list");
+            list.innerHTML = "";
 
-  async function list(path="", ul){
-    const r = await fetch(api(path));
-    if(!r.ok) throw new Error("GitHub API error " + r.status);
-    const data = await r.json();
-    data.sort((a,b)=> a.type===b.type ? a.name.localeCompare(b.name) : (a.type==='dir'?-1:1));
-    for(const e of data){
-      const li = document.createElement('li');
-      if(e.type==='dir'){
-        li.className='dir';
-        li.innerHTML = `<span>📁 ${e.name}</span>`;
-        const sub = document.createElement('ul'); sub.style.display='none'; li.appendChild(sub);
-        li.firstChild.addEventListener('click', async ()=>{
-          if(sub.childElementCount===0) await list(e.path, sub);
-          sub.style.display = sub.style.display==='none' ? '' : 'none';
-        });
-      } else {
-        li.innerHTML = `<a href="#" data-path="${e.path}">📄 ${e.name}</a>`;
-        li.querySelector('a').addEventListener('click', ev=>{ev.preventDefault(); view(e.path);});
-      }
-      ul.appendChild(li);
-    }
-  }
+            data.forEach(item => {
+                const li = document.createElement("li");
+                if (item.type === "dir") {
+                    li.innerHTML = `<strong>[DIR]</strong> <a href="?path=${item.path}">${item.name}</a>`;
+                } else {
+                    li.innerHTML = `<a href="${item.html_url}" target="_blank">${item.name}</a>`;
+                }
+                list.appendChild(li);
+            });
+        }
 
-  async function view(p){
-    document.getElementById('viewerWrap').style.display='block';
-    document.getElementById('path').textContent=p;
-    document.getElementById('raw').href = raw(p);
-    document.getElementById('blob').href = blob(p);
-    const r = await fetch(raw(p));
-    const text = await r.text();
-    document.getElementById('viewer').textContent = text;
-  }
-
-  function filter(){
-    const q = (search.value||'').toLowerCase();
-    for(const li of tree.querySelectorAll('li')){
-      const t = li.textContent.toLowerCase();
-      li.style.display = t.includes(q) ? '' : 'none';
-    }
-  }
-
-  search.addEventListener('input', filter);
-
-  (async ()=>{
-    status.textContent = "Loading...";
-    try{ await list("", tree); status.textContent = ""; }
-    catch(err){ status.textContent = String(err); }
-  })();
-})();
-</script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const path = urlParams.get("path") || "";
+        loadFiles(path);
+    </script>
 </body>
 </html>
-"""
-html = template.replace("{OWNER}", owner).replace("{REPO}", repo).replace("{BRANCH}", branch)
-open('/mnt/data/index.html','w',encoding='utf-8').write(html)
-print("Wrote /mnt/data/index.html")
+
